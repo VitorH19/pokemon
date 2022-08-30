@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import axios from 'axios'
-import { capitalizeFirstLetter } from '../../utils/functions'
+import { addCommaBeforeLastNumber, capitalizeFirstLetter, setTypeBackgroundColor } from '../../utils/functions'
 
 interface Props {
   pokemonUrl: string
@@ -48,14 +48,17 @@ const PokemonCard = (props: Props) => {
         
         <View style={styles.types}>
           {
-            pokemon.types.map((type, index) => (
-              <Text key={index} style={styles.type}>{type.type.name}</Text>
-            ))
+            pokemon.types.map((type, index) => {
+              const bgColor = setTypeBackgroundColor(type.type.name)
+              return (
+                <Text key={index} style={[styles.type, { backgroundColor: bgColor}]}>{capitalizeFirstLetter(type.type.name)}</Text>
+              )
+            })
           }
         </View>
         <View style={styles.types}>
-          <Text>{pokemon.weight}</Text>
-          <Text>{pokemon.height}</Text>
+          <Text>{addCommaBeforeLastNumber(pokemon.weight) + ' Kg'}</Text>
+          <Text>{pokemon.height + '"'}</Text>
         </View>
       </View>
     </View>
@@ -81,6 +84,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15
   },
   name: {
+    fontFamily: 'Poppins_700Bold',
     fontSize: 24,
     width: '100%',
   },
@@ -91,8 +95,11 @@ const styles = StyleSheet.create({
     width: 120,
   },
   type: {
+    fontFamily: 'Poppins_400Regular',
     fontSize: 18,
     color: 'black',
+    backgroundColor: 'red',
+    alignSelf: 'center'
   }
 })
 

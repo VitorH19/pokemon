@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, ScrollView, Image, StatusBar } from 'react-native';
 import axios from 'axios';
+
+import { useFonts } from 'expo-font'
+import {
+  Poppins_400Regular,
+  Poppins_700Bold
+} from '@expo-google-fonts/poppins'
+
 import PokemonCard from './components/PokemonCard';
 
 export default function App() {
+
+  const [loaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_700Bold
+  })
 
   const [pokemon, setPokemon] = useState(
     [
@@ -14,18 +26,28 @@ export default function App() {
     ]
   )
 
+  const [loading, setLoading] = useState(true)
+
+
   useEffect(() => {
+    let source = axios.CancelToken.source()
     axios
-      .get('https://pokeapi.co/api/v2/pokemon/')
+      .get('https://pokeapi.co/api/v2/pokemon?limit=1153', {
+        cancelToken: source.token
+      })
       .then(res => {
-        setPokemon(res.data.results);
+        setPokemon(res.data.results)
+        setLoading(false)
       })
       .catch(err => {
         console.log(err);
       })
-  })
+      return () => {
+        source.cancel()
+      }
+  }, [])
 
-  return (
+  if(loaded) return (
     <ScrollView contentContainerStyle={styles.container}>
       {
         pokemon.map((poke, index) => (
