@@ -59,13 +59,10 @@ const typeColors = {
 };
 
 // This function should be used in a style prop to set the background color depending on the type parameter
-export function setTypeBackgroundColor(type = "") {
+export function setTypeBackgroundColor(type: string) {
   if (type === (null || "")) return;
   
-  if (type === "dragon") return { background: `linear-gradient(to bottom, ${typeColors.dragon[0]} 50%, ${typeColors.dragon[1]} 50%)` }
-  else if (type === "ground") return { background: `linear-gradient(to bottom, ${typeColors.ground[0]} 50%, ${typeColors.ground[1]} 50%)` }
-  else if (type === "flying") return { background: `linear-gradient(to bottom, ${typeColors.flying[0]} 50%, ${typeColors.flying[1]} 50%)` }
-  else return { background: typeColors[type] }
+  return typeColors[type]
 };
 
 

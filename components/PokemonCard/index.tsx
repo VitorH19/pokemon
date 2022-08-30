@@ -33,6 +33,7 @@ const PokemonCard = (props: Props) => {
         setPokemon(res.data)
       })
       .catch(err => console.log(err))
+    
   }, [])
   if(pokemon.url === '#') return (
     <></>
@@ -51,7 +52,7 @@ const PokemonCard = (props: Props) => {
             pokemon.types.map((type, index) => {
               const bgColor = setTypeBackgroundColor(type.type.name)
               return (
-                <Text key={index} style={[styles.type, { backgroundColor: bgColor}]}>{capitalizeFirstLetter(type.type.name)}</Text>
+                <Text key={index} style={[styles.type, {backgroundColor: setTypeBackgroundColor(type.type.name)}]}>{capitalizeFirstLetter(type.type.name)}</Text>
               )
             })
           }
@@ -67,26 +68,26 @@ const PokemonCard = (props: Props) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: '80%',
+    width: '90%',
     minHeight: 100,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#6589b8',
-    marginVertical: 20,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: '#000',
     borderRadius: 15
   },
   sprite: {
     width: 100, 
     height: 100, 
-    backgroundColor: '#333333', 
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15
   },
   name: {
     fontFamily: 'Poppins_700Bold',
     fontSize: 24,
-    width: '100%',
+    width: 242,
   },
   types: {
     flex: 1,
@@ -98,8 +99,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_400Regular',
     fontSize: 18,
     color: 'black',
-    backgroundColor: 'red',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    paddingHorizontal: 10,
+    marginRight: 10,
+    borderRadius: 5
   }
 })
 

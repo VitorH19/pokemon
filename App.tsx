@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, ScrollView, Image, StatusBar } from 'react-native';
-import axios from 'axios';
+import React, { useState } from 'react'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { NavigationContainer } from '@react-navigation/native'
+// Icons
+import { FontAwesome } from '@expo/vector-icons';
 
+// Screens
+import PokemonList from './screens/PokemonList'
+
+// Fonts
 import { useFonts } from 'expo-font'
 import {
   Poppins_400Regular,
   Poppins_700Bold
 } from '@expo-google-fonts/poppins'
-
-import PokemonCard from './components/PokemonCard';
+import { View, ActivityIndicator } from 'react-native';
 
 export default function App() {
 
@@ -17,55 +22,40 @@ export default function App() {
     Poppins_700Bold
   })
 
-  const [pokemon, setPokemon] = useState(
-    [
-      {
-        url: '',
-        name: ''
-      }
-    ]
-  )
-
   const [loading, setLoading] = useState(true)
 
-
-  useEffect(() => {
-    let source = axios.CancelToken.source()
-    axios
-      .get('https://pokeapi.co/api/v2/pokemon?limit=1153', {
-        cancelToken: source.token
-      })
-      .then(res => {
-        setPokemon(res.data.results)
-        setLoading(false)
-      })
-      .catch(err => {
-        console.log(err);
-      })
-      return () => {
-        source.cancel()
-      }
-  }, [])
+  const BottomTab = createBottomTabNavigator()
 
   if(loaded) return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {
-        pokemon.map((poke, index) => (
-          <PokemonCard 
-            pokemonUrl={poke.url}
-            key={index}  
-          />
-        ))
-      }
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'}/>
-    </ScrollView>
-  );
+    <NavigationContainer>
+      <BottomTab.Navigator 
+        initialRouteName='PokemonList'
+        screenOptions={{
+          headerShown: false
+        }}
+      >
+        <BottomTab.Screen 
+          name={'PokemonList'}
+          component={PokemonList}
+          options={{
+            tabBarIcon: ({color}) => <FontAwesome name="th-list" size={24} color={color} />
+          }}
+        />
+        <BottomTab.Screen 
+          name={'BerryList'}
+          component={PokemonList}
+          options={{
+            tabBarIcon: ({color}) => <FontAwesome name="th-list" size={24} color={color} />
+          }}
+        />
+      </BottomTab.Navigator>
+    </NavigationContainer>
+  )
+  else return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <ActivityIndicator 
+        size={'large'}
+      />
+    </View>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingTop: StatusBar.currentHeight
-  },
-});
