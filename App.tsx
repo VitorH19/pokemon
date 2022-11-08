@@ -14,6 +14,8 @@ import {
   Poppins_700Bold
 } from '@expo-google-fonts/poppins'
 import { View, ActivityIndicator } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Pokemon from './screens/Pokemon';
 
 export default function App() {
 
@@ -21,8 +23,6 @@ export default function App() {
     Poppins_400Regular,
     Poppins_700Bold
   })
-
-  const [loading, setLoading] = useState(true)
 
   const BottomTab = createBottomTabNavigator()
 
@@ -36,7 +36,7 @@ export default function App() {
       >
         <BottomTab.Screen 
           name={'PokemonList'}
-          component={PokemonList}
+          component={PokemonStack}
           options={{
             tabBarIcon: ({color}) => <FontAwesome name="th-list" size={24} color={color} />
           }}
@@ -57,5 +57,16 @@ export default function App() {
         size={'large'}
       />
     </View>
+  )
+}
+
+const PokemonStack = () => {
+  const Stack = createNativeStackNavigator()
+
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name={'PokemonList'} component={PokemonList} />
+      <Stack.Screen name={'Pokemon'} component={Pokemon}/>
+    </Stack.Navigator>
   )
 }

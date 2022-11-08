@@ -32,6 +32,7 @@ const PokemonList = () => {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
+    setLoading(true)
     let source = axios.CancelToken.source()
     axios
       .get('https://pokeapi.co/api/v2/pokemon?limit=151', {
@@ -49,29 +50,26 @@ const PokemonList = () => {
       }
   }, [])
 
-  if(loaded) return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll={true} >
-      <View style={{width: '100%', alignItems: 'center'}}>
-        <SearchBar _onChange={(text) => setSearch(text.toLowerCase())}/>
-      </View>
-      <Text>{search}</Text>
-      <ExpoStatusBar.StatusBar />
-      {
-        pokemons.filter(pokemon => {
-          if(search == '') return pokemon
-          else if (pokemon.name.includes(search) || pokemon.url.slice(-4, -1).includes(search)) return pokemon
-        }).map((poke, index) => (
-          <>
-          <Text>{poke.name}</Text>
+  if(!loading) return (
+    <View style={{flex: 1, padding: 10, backgroundColor: 'white'}}>
+      <Text style={{fontFamily: 'Poppins_700Bold', fontSize: 36}}>Pokemons</Text>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} >
+        <ExpoStatusBar.StatusBar />
+        {
+          pokemons.map((poke, index) => (
+            
             <PokemonCard 
               pokemonUrl={poke.url}
               key={index}  
             />
-          </>
-        ))
-      }
-    </ScrollView>
-  );
+          ))
+        }
+      </ScrollView>
+    </View>
+  )
+  else return (
+    <Text>Loading...</Text>
+  )
 }
 
 const styles = StyleSheet.create({

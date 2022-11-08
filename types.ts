@@ -31,3 +31,17 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >;
+
+type Type = {
+  type: {
+    name: string
+  }
+}
+
+export type PokemonType = {
+  name: string,
+  sprites: {
+    front_default: string
+  },
+  types: Array<Type>
+}

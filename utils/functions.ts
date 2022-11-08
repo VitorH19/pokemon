@@ -61,7 +61,7 @@ const typeColors = {
 // This function should be used in a style prop to set the background color depending on the type parameter
 export function setTypeBackgroundColor(type: string) {
   if (type === (null || "")) return;
-  
+  // @ts-ignore
   return typeColors[type]
 };
 
