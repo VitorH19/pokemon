@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { addCommaBeforeLastNumber, capitalizeFirstLetter, setTypeBackgroundColor } from '../../utils/functions'
 
@@ -8,6 +9,8 @@ interface Props {
 }
 
 const PokemonCard = (props: Props) => {
+
+  const navigation = useNavigation()
 
   const [pokemon, setPokemon] = useState({
     name: '',
@@ -39,7 +42,8 @@ const PokemonCard = (props: Props) => {
     <></>
   )
   else return (
-    <View style={styles.card}>
+    // @ts-ignore
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pokemon', {url: props.pokemonUrl})}>
       <Image 
         source={{uri: pokemon.sprites.front_default}}
         style={styles.sprite}
@@ -62,13 +66,13 @@ const PokemonCard = (props: Props) => {
           <Text>{pokemon.height + '"'}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   card: {
-    width: '90%',
+    width: '100%',
     minHeight: 100,
     flex: 1,
     flexDirection: 'row',
