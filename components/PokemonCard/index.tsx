@@ -7,44 +7,38 @@ interface Props {
   pokemonUrl: string
 }
 
-type Pokemon = {
-  name: string,
-  url: string,
-  sprites: {
-    front_default: string
-  },
-  types: [
-    {
-      type: {
-        name: string
-      }
-    }
-  ],
-  height: number,
-  weight: number
-}
-
 const PokemonCard = (props: Props) => {
 
-  const [pokemon, setPokemon] = useState<Pokemon>()
-  const [isLoaded, setIsLoaded] = useState<boolean>(true)
+  const [pokemon, setPokemon] = useState({
+    name: '',
+    url: '#',
+    sprites: {
+      front_default: ''
+    },
+    types: [
+      {
+        type: {
+          name: ''
+        }
+      }
+    ],
+    height: 0,
+    weight: 0
+  })
 
   useEffect(() => {
-    console.log(props.pokemonUrl)
-    
-    // axios
-    //   .get(props.pokemonUrl)
-    //   .then(res => {
-    //     setPokemon(res.data)
-    //     setIsLoaded(false)
-    //   })
-    //   .catch(err => console.log(err))
+    axios
+      .get(props.pokemonUrl)
+      .then(res => {
+        setPokemon(res.data)
+      })
+      .catch(err => console.log(err))
     
   }, [])
-  if(pokemon && pokemon.url === '#') return (
+  if(pokemon.url === '#') return (
     <></>
   )
-  else if (pokemon && isLoaded) return (
+  else return (
     <View style={styles.card}>
       <Image 
         source={{uri: pokemon.sprites.front_default}}

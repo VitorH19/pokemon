@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, ScrollView, Image, StatusBar, View, FlatList } from 'react-native';
+import { StyleSheet, Text, ScrollView, Image, StatusBar, View } from 'react-native';
 import * as ExpoStatusBar from 'expo-status-bar'
 import axios from 'axios';
 
@@ -28,7 +28,7 @@ const PokemonList = () => {
     ]
   )
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
 
   useEffect(() => {
@@ -39,8 +39,6 @@ const PokemonList = () => {
       })
       .then(res => {
         setPokemons(res.data.results)
-        console.log(pokemons[0])
-        
         setLoading(false)
       })
       .catch(err => {
@@ -51,17 +49,29 @@ const PokemonList = () => {
       }
   }, [])
 
-  if(pokemons) return (
-    <FlatList 
-      contentContainerStyle={styles.container}
-      data={pokemons}
-      // @ts-ignore
-      renderItem={({pokemon}) =>  console.log(pokemon.url)}
-    />
-  )
-  else return (
-    <Text>Loading...</Text>
-  )
+  if(loaded) return (
+    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll={true} >
+      <View style={{width: '100%', alignItems: 'center'}}>
+        <SearchBar _onChange={(text) => setSearch(text.toLowerCase())}/>
+      </View>
+      <Text>{search}</Text>
+      <ExpoStatusBar.StatusBar />
+      {
+        pokemons.filter(pokemon => {
+          if(search == '') return pokemon
+          else if (pokemon.name.includes(search) || pokemon.url.slice(-4, -1).includes(search)) return pokemon
+        }).map((poke, index) => (
+          <>
+          <Text>{poke.name}</Text>
+            <PokemonCard 
+              pokemonUrl={poke.url}
+              key={index}  
+            />
+          </>
+        ))
+      }
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
